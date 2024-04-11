@@ -1,5 +1,7 @@
 # Revoize SDK
 
+[![CI](https://github.com/Revoize/revoize-python-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/Revoize/revoize-python-sdk/actions/workflows/ci.yml)
+
 This package allows you to interact with [Revoize](https://revoize.com) through Python.
 
 ## Installation
