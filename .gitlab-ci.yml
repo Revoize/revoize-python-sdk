@@ -1,0 +1,49 @@
+default:
+  image: python:3.11-bookworm
+
+# TODO: Add caching based on
+# https://dev.to/iamibi/add-coverage-report-with-pytest-and-gitlab-ci-3e9p
+
+before_script:
+  - apt update
+  - apt install -y pipx
+  - pipx ensurepath
+  # pipx ensurepath configures PATH but requires terminal restart.
+  # We can't do that on CI so we export PATH manually.
+  - export PATH=/root/.local/bin:$PATH
+  - pipx install poetry
+  - pipx install poethepoet
+  - poetry install
+  - source $(poetry env info --path)/bin/activate
+
+stages:
+  - test
+
+# TODO: consider replacing the coverage logic with one based on official Gitlab docs
+# https://docs.gitlab.com/ee/ci/testing/test_coverage_visualization.html#python-example
+
+full-test:
+  stage: test
+  script:
+    - echo "Starting full test stage"
+    - poe test-coverage-run
+    - poe test-coverage-report
+    - poe test-coverage-xml
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+  artifacts:
+    # https://docs.gitlab.com/ee/ci/yaml/index.html#artifactsexpire_in
+    expire_in: 1 week
+
+    # https://docs.gitlab.com/ee/ci/testing/test_coverage_visualization.html
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+
+lint:
+  stage: test
+  script:
+    - echo "Starting lint stage"
+    - poe lint
+  artifacts:
+    when: always
