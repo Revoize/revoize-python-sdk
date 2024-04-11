@@ -21,6 +21,7 @@ python = "^3.11"
 click = "^8.1.7"
 requests = "^2.31.0"
 pydantic = "^2.6.4"
+tomli = "^2.0.1"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^7.0.0"

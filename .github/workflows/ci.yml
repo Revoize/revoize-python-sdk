@@ -20,7 +20,7 @@ jobs:
           export PYENV_ROOT="$HOME/.pyenv"
           [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
           eval "$(pyenv init -)"
-          pyenv install 3.11
+          pyenv install 3.11.4
       - name: Install Poetry and Poe
         run: |
           pipx install poetry
