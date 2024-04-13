@@ -29,7 +29,7 @@ revoize-enhance \
 or through the Python API:
 
 ```py
-from revoize.api import RevoizeClient
+from revoize import RevoizeClient
 
 client = RevoizeClient(username="****", password="****")
 client.enhance_file("my-file.wav", "my-file-enhanced.wav")
