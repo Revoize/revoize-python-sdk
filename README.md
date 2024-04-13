@@ -37,6 +37,8 @@ client.enhance_file("my-file.wav", "my-file-enhanced.wav")
 
 ## Advanced usage
 
+### Additional parameters
+
 You can also specify some processing parameters:
 
 - output loudness - in LUFS, between -32 and -8
@@ -54,9 +56,32 @@ params = EnhancementParameters(loudness=-20)
 client.enhance_file("my-file.wav", "my-file-enhanced.wav", params)
 ```
 
+### Using with a different Revoize tenant
+
+You may need to use this SDK against a different Revoize environment than our production. In that case, you should be provided 3 configuration parameters:
+
+- `cognito_client_id`
+- `cognito_region`
+- `revoize_url`
+
+All of those should be passed to the `RevoizeClient` constructor like:
+
+```py
+from revoize.api import RevoizeClient
+client = RevoizeClient(
+    username="****",
+    password="****",
+    revoize_url=revoize_url,
+    cognito_client_id=cognito_client_id,
+    cognito_region=cognito_region
+)
+```
+
+After this setup, you can use the `client` object as usual.
+
 ## Publishing to PyPI
 
-This section contains a guide for maintainers about publishing to PyPi.
+This section contains a guide for maintainers about publishing to PyPI.
 
 Before you can publish updates to this package you need to go through a few steps of configuration:
 
