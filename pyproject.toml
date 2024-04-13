@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "revoize"
-version = "0.1.0"
+version = "0.1.1"
 description = "Revoize Python SDK"
 authors = ["Revoize <office@revoize.com>"]
 license = "MIT"
@@ -39,7 +39,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-revoize-enhance = "revoize.scripts.enhance_cli:_enhance"
+revoize-enhance = "revoize.cli.enhance:_enhance"
 
 [tool.black]
 line-length = 88
