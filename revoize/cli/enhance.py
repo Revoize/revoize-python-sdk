@@ -37,7 +37,7 @@ def _enhance(
     """Enhance selected file."""
     if output_file_path is None:
         filename, extension = os.path.splitext(input_file_path)
-        output_file_path = f"{filename}-enhanced.{extension}"
+        output_file_path = f"{filename}-enhanced{extension}"
     client = RevoizeClient(
         username, password, revoize_url, cognito_client_id, cognito_region
     )
