@@ -5,11 +5,6 @@ from typing import Generator, Optional
 import pytest
 
 from revoize.auth import login
-from revoize.defaults import (
-    DEFAULT_COGNITO_CLIENT_ID,
-    DEFAULT_COGNITO_REGION,
-    DEFAULT_REVOIZE_URL,
-)
 from revoize.schema import Credentials
 
 

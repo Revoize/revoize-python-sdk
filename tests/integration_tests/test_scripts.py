@@ -13,12 +13,12 @@ from fixtures import (  # noqa: F401
 
 
 def test_enhance_cli(
-    password,
-    random_file_path,
-    test_file_path,
-    username,
-    revoize_url,
-    cognito_client_id,
+    password,  # noqa: F811
+    random_file_path,  # noqa: F811
+    test_file_path,  # noqa: F811
+    username,  # noqa: F811
+    revoize_url,  # noqa: F811
+    cognito_client_id,  # noqa: F811
     cognito_region,  # noqa: F811
 ):
     # TODO: improve this test handling. The point is that we want to separately test
