@@ -57,9 +57,7 @@ client.enhance_file("my-file.wav", "my-file-revoize.wav", params)
 
 ### Using with a different Revoize tenant
 
-You may need to use this SDK against a different Revoize environment than our global production. In that case, you should be provided a dedicated `revoize_url`:
-
-This should be passed to the `RevoizeClient` constructor like:
+You may need to use this SDK against a different Revoize environment than our global production. In that case, you should be provided a dedicated `revoize_url`. This should be passed to the `RevoizeClient` constructor like:
 
 ```py
 from revoize.api import RevoizeClient

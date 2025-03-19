@@ -13,7 +13,7 @@ def test_client(
     client = RevoizeClient(api_key)
     client.enhance_file(test_file_path, random_file_path)
     assert os.path.isfile(random_file_path)
-    # Check file has at least 250kb, the actual file will have over 700 kb
+    # Check file has at least 250 kb, the actual file will have over 700 kb
     # but this can depend on various factors and we don't want this to be too
     # sensitive
     assert os.path.getsize(random_file_path) > 250_000

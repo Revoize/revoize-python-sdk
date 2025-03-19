@@ -34,7 +34,7 @@ class RevoizeClient:
         api_key: str,
         revoize_url: Optional[str] = None,
     ):
-        # Signature of this method is uing None instead of DEFAULT_* parameters
+        # Signature of this method is using None instead of DEFAULT_* parameters
         # so that we can pass here None values from tests and CLI scripts. Otherwise,
         # we'd need to set those defaults in all those other places as well.
         self.revoize_url = revoize_url or DEFAULT_REVOIZE_URL

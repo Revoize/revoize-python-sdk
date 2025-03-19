@@ -681,6 +681,20 @@ Flake8 = ">=5"
 dev = ["pyTest", "pyTest-cov"]
 
 [[package]]
+name = "flake8-spellcheck"
+version = "0.28.0"
+description = "Spellcheck variables, comments and docstrings"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "flake8-spellcheck-0.28.0.tar.gz", hash = "sha256:6fb79724f27097af0b4c678c7eaf731f0d87cf4c1eae7fbd7836c1c78d67e12c"},
+    {file = "flake8_spellcheck-0.28.0-py3-none-any.whl", hash = "sha256:a0a37164b9175819b143ce0f0a8d2475457af3f0d77cd8423b0daf204662ee72"},
+]
+
+[package.dependencies]
+flake8 = ">3.0.0"
+
+[[package]]
 name = "h11"
 version = "0.14.0"
 description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
@@ -1900,4 +1914,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "e253dfb146800eaf1d9cf3c7c218683af073d29c9e2cfdf483cbb037accdb897"
+content-hash = "74b8cd72f5e99e3912c27dba86eeaeea12987058af0db42b5daa9e0133cd7b42"
