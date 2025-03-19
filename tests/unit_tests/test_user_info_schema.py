@@ -2,8 +2,8 @@ from datetime import timedelta
 
 import pydantic
 
-from revoize.schema import UserInfo
 from revoize.api.utils import format_pydantic_error
+from revoize.schema import UserInfo
 
 
 def test_user_info_schema():

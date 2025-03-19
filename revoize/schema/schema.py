@@ -11,37 +11,6 @@ class UserInfo(BaseModel):
     user_plan: str = Field(validation_alias="userPlan")
 
 
-class CognitoAuthenticationResult(BaseModel):
-    access_token: str = Field(validation_alias="AccessToken")
-    expires_in: int = Field(validation_alias="ExpiresIn")
-    id_token: str = Field(validation_alias="IdToken")
-    refresh_token: str = Field(validation_alias="RefreshToken")
-    token_type: str = Field(validation_alias="TokenType")
-
-
-class CognitoLoginResponse(BaseModel):
-    authentication_result: CognitoAuthenticationResult = Field(
-        validation_alias="AuthenticationResult"
-    )
-    # TODO: Improve handling of challenge parameters
-    challenge_parameters: dict = Field(validation_alias="ChallengeParameters")
-
-
-class Credentials(BaseModel):
-    token: str
-
-    @classmethod
-    def from_cognito_login_response(
-        cls, cognito_login_response: CognitoLoginResponse
-    ) -> "Credentials":
-        return Credentials(
-            token=cognito_login_response.authentication_result.access_token
-        )
-
-    def as_auth_header(self) -> Dict[str, str]:
-        return {"Authorization": f"Bearer {self.token}"}
-
-
 class UploadedFileMetadata(BaseModel):
     etag: str
     upload_id: str

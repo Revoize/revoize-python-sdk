@@ -86,6 +86,11 @@ cmd = "poetry run coverage xml"
 [tool.flake8]
 exclude = ["venv", ".venv"]
 max-line-length = 88
+dictionaries = ["en_US", "python", "technical"]
+ignore = ["D104", "D100", "D101", "D106", "W503", "E704"]
+per-file-ignores = """
+    tests/**: F401, F811
+"""
 
 [tool.poe.tasks.package-name]
 shell="""
