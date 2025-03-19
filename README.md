@@ -52,7 +52,7 @@ from revoize.schema import EnhancementParameters
 
 client = RevoizeClient(username="****", password="****")
 params = EnhancementParameters(loudness=-20)
-client.enhance_file("my-file.wav", "my-file-enhanced.wav", params)
+client.enhance_file("my-file.wav", "my-file-revoize.wav", params)
 ```
 
 ### Using with a different Revoize tenant
