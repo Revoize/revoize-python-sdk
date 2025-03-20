@@ -7,46 +7,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Install pipx
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+          version: ${{ vars.POETRY_VERSION }}
+      - name: Install Poe
         run: |
-          sudo apt-get update
-          sudo apt-get install -y pipx
-          pipx ensurepath
-          export PATH=/root/.local/bin:$PATH
-      - name: Install Pyenv and Python
-        run: |
-          curl https://pyenv.run | bash
-          export PYENV_ROOT="$HOME/.pyenv"
-          [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-          eval "$(pyenv init -)"
-          pyenv install $(cat .python-version)
-      - name: Install Poetry and Poe
-        run: |
-          pipx install poetry
-          poetry config virtualenvs.prefer-active-python true
           pipx install poethepoet
-      - name: Install Dependencies
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('./poetry.lock') }}
+      - name: Install dependencies
+        working-directory: .
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+      - name: Install project
+        working-directory: .
         run: |
-          export PYENV_ROOT="$HOME/.pyenv"
-          [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-          eval "$(pyenv init -)"
-          poetry config virtualenvs.prefer-active-python true
-          poetry install
-      - name: Test
-        env:
-          TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
-          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+          poetry install --no-interaction
+      - name: Run tests
+        working-directory: .
         run: |
-          export PYENV_ROOT="$HOME/.pyenv"
-          [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-          eval "$(pyenv init -)"
-          poetry config virtualenvs.prefer-active-python true
+          source .venv/bin/activate
           poe test
-      - name: Lint
+      - name: Run lint
+        working-directory: .
         run: |
-          export PYENV_ROOT="$HOME/.pyenv"
-          [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-          eval "$(pyenv init -)"
-          poetry config virtualenvs.prefer-active-python true
+          source .venv/bin/activate
           poe lint
