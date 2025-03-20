@@ -14,16 +14,15 @@ pip install revoize
 
 ## Basic usage
 
-To use this package you will need to have created an account with Revoize and use your account credentials as `username` and `password` in the commands below.
+To use this package you will need to have created an account with Revoize and received an API Key from the Revoize Support team.
 
 To enhance your file (`my-file.wav`) with Revoize you can either use the CLI:
 
 ```bash
 revoize-enhance \
-    --username **** \
-    --password **** \
+    --api-key **** \
     --input-file-path my-file.wav \
-    --output-file-path my-file-enhanced.wav
+    --output-file-path my-file-revoize.wav
 ```
 
 or through the Python API:
@@ -31,8 +30,8 @@ or through the Python API:
 ```py
 from revoize import RevoizeClient
 
-client = RevoizeClient(username="****", password="****")
-client.enhance_file("my-file.wav", "my-file-enhanced.wav")
+client = RevoizeClient(api_key="***")
+client.enhance_file("my-file.wav", "my-file-revoize.wav")
 ```
 
 ## Advanced usage
@@ -53,27 +52,18 @@ from revoize.schema import EnhancementParameters
 
 client = RevoizeClient(username="****", password="****")
 params = EnhancementParameters(loudness=-20)
-client.enhance_file("my-file.wav", "my-file-enhanced.wav", params)
+client.enhance_file("my-file.wav", "my-file-revoize.wav", params)
 ```
 
 ### Using with a different Revoize tenant
 
-You may need to use this SDK against a different Revoize environment than our production. In that case, you should be provided 3 configuration parameters:
-
-- `cognito_client_id`
-- `cognito_region`
-- `revoize_url`
-
-All of those should be passed to the `RevoizeClient` constructor like:
+You may need to use this SDK against a different Revoize environment than our global production. In that case, you should be provided a dedicated `revoize_url`. This should be passed to the `RevoizeClient` constructor like:
 
 ```py
 from revoize.api import RevoizeClient
 client = RevoizeClient(
-    username="****",
-    password="****",
+    api_key="****",
     revoize_url=revoize_url,
-    cognito_client_id=cognito_client_id,
-    cognito_region=cognito_region
 )
 ```
 
@@ -102,18 +92,5 @@ You can then issue updates with:
 To test the SDK against production environment, all you need to do is run:
 
 ```sh
-TEST_USERNAME="<your Revoize username>" TEST_PASSWORD="<your Revoize password>" poe test
+TEST_API_KEY="<your Revoize API Key>" poe test
 ```
-
-If you would like to test the SDK against a different environment, you need to supply additional env variables:
-
-```py
-TEST_USERNAME="***" \
-    TEST_PASSWORD="***" \
-    TEST_REVOIZE_URL="***" \
-    COGNITO_CLIENT_ID="***" \
-    COGNITO_REGION="***"
-    poe test
-```
-
-Feel free to contact Revoize Support to find out what values you should use here.

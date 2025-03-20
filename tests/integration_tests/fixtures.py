@@ -4,27 +4,10 @@ from typing import Generator, Optional
 
 import pytest
 
-from revoize.auth import login
-from revoize.schema import Credentials
-
 
 @pytest.fixture(scope="session")
-def credentials() -> Credentials:
-    username = load_env_var("TEST_USERNAME")
-    password = load_env_var("TEST_PASSWORD")
-    cognito_client_id = load_env_var("COGNITO_CLIENT_ID")
-    cognito_region = load_env_var("COGNITO_REGION")
-    return login(username, password, cognito_client_id, cognito_region)
-
-
-@pytest.fixture(scope="session")
-def username() -> str:
-    return load_env_var("TEST_USERNAME")
-
-
-@pytest.fixture(scope="session")
-def password() -> str:
-    return load_env_var("TEST_PASSWORD")
+def api_key() -> str:
+    return load_env_var("TEST_API_KEY")
 
 
 @pytest.fixture
@@ -40,16 +23,6 @@ def random_file_path() -> Generator[str, None, None]:
 @pytest.fixture(scope="session")
 def revoize_url() -> Optional[str]:
     return load_env_var_or_none("TEST_REVOIZE_URL")
-
-
-@pytest.fixture(scope="session")
-def cognito_client_id() -> Optional[str]:
-    return load_env_var_or_none("COGNITO_CLIENT_ID")
-
-
-@pytest.fixture(scope="session")
-def cognito_region() -> Optional[str]:
-    return load_env_var_or_none("COGNITO_REGION")
 
 
 @pytest.fixture(scope="session")

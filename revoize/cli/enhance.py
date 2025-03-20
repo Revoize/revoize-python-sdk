@@ -8,8 +8,7 @@ from revoize.schema import EnhancementParameters
 
 
 @click.command()
-@click.option("--username", "-u", help="Your Revoize username", required=True)
-@click.option("--password", "-p", help="Your Revoize password", required=True)
+@click.option("--api-key", "-k", help="Your Revoize API Key", required=True)
 @click.option(
     "--input-file-path", "-f", help="Path to file to be enhanced", required=True
 )
@@ -22,25 +21,18 @@ from revoize.schema import EnhancementParameters
     help="Output loudness",
 )
 @click.option("--revoize-url", help="Revoize URL")
-@click.option("--cognito-client-id", help="Cognito Client ID")
-@click.option("--cognito-region", help="Cognito Region")
 def _enhance(
-    username,
-    password,
+    api_key,
     input_file_path,
     output_file_path,
     output_loudness,
     revoize_url: Optional[str] = None,
-    cognito_client_id: Optional[str] = None,
-    cognito_region: Optional[str] = None,
 ):
     """Enhance selected file."""
     if output_file_path is None:
         filename, extension = os.path.splitext(input_file_path)
         output_file_path = f"{filename}-enhanced{extension}"
-    client = RevoizeClient(
-        username, password, revoize_url, cognito_client_id, cognito_region
-    )
+    client = RevoizeClient(api_key, revoize_url)
     params = EnhancementParameters(loudness=output_loudness)
     client.enhance_file(input_file_path, output_file_path, params)
 

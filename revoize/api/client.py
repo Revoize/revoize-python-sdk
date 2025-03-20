@@ -1,16 +1,11 @@
 import os
 from time import sleep
-from typing import List, Optional, Type, TypeVar, overload
+from typing import Dict, List, Optional, Type, TypeVar, overload
 
 import pydantic
 import requests
 
-from ..auth import login
-from ..defaults import (
-    DEFAULT_COGNITO_CLIENT_ID,
-    DEFAULT_COGNITO_REGION,
-    DEFAULT_REVOIZE_URL,
-)
+from ..defaults import DEFAULT_REVOIZE_URL
 from ..schema import (
     DownloadLink,
     Enhancement,
@@ -36,24 +31,16 @@ class RevoizeClient:
 
     def __init__(
         self,
-        username: str,
-        password: str,
+        api_key: str,
         revoize_url: Optional[str] = None,
-        cognito_client_id: Optional[str] = None,
-        cognito_region: Optional[str] = None,
     ):
-        # Signature of this method is uing None instead of DEFAULT_* parameters
+        # Signature of this method is using None instead of DEFAULT_* parameters
         # so that we can pass here None values from tests and CLI scripts. Otherwise,
         # we'd need to set those defaults in all those other places as well.
         self.revoize_url = revoize_url or DEFAULT_REVOIZE_URL
-        self.credentials = login(
-            username,
-            password,
-            cognito_client_id or DEFAULT_COGNITO_CLIENT_ID,
-            cognito_region or DEFAULT_COGNITO_REGION,
-        )
+        self.api_key = api_key
 
-    def get_user_info(self):
+    def get_user_info(self) -> UserInfo:
         return self._get_revoize(
             "/internal-api/users/me",
             error_message="Failed to retrieve user info from Revoize.",
@@ -243,7 +230,7 @@ class RevoizeClient:
         response_schema: Optional[Type[ExtendsBaseModel]] = None,
         **kwargs,
     ) -> requests.Response | ExtendsBaseModel:
-        auth_header = self.credentials.as_auth_header()
+        auth_header = self._get_auth_header()
         kwargs["headers"] = kwargs.get("headers", {}) | auth_header
         url = f"{self.revoize_url}{path}"
         response = self._get_raw(url, *args, error_message=error_message, **kwargs)
@@ -278,7 +265,7 @@ class RevoizeClient:
         response_schema: Optional[Type[ExtendsBaseModel]] = None,
         **kwargs,
     ) -> requests.Response | ExtendsBaseModel:
-        auth_header = self.credentials.as_auth_header()
+        auth_header = self._get_auth_header()
         kwargs["headers"] = kwargs.get("headers", {}) | auth_header
         url = f"{self.revoize_url}{path}"
         response = self._post_raw(url, *args, error_message=error_message, **kwargs)
@@ -286,17 +273,20 @@ class RevoizeClient:
             return try_parse_response(response, response_schema)
         return response
 
-    def _get_raw(self, *args, error_message: str, **kwargs):
+    def _get_auth_header(self) -> Dict[str, str]:
+        return {"X-API-KEY": self.api_key}
+
+    def _get_raw(self, *args, error_message: str, **kwargs) -> requests.Response:
         response = requests.get(*args, **kwargs)
         raise_if_response_not_ok(response, error_message)
         return response
 
-    def _post_raw(self, *args, error_message: str, **kwargs):
+    def _post_raw(self, *args, error_message: str, **kwargs) -> requests.Response:
         response = requests.post(*args, **kwargs)
         raise_if_response_not_ok(response, error_message)
         return response
 
-    def _put_raw(self, *args, error_message: str, **kwargs):
+    def _put_raw(self, *args, error_message: str, **kwargs) -> requests.Response:
         response = requests.put(*args, **kwargs)
         raise_if_response_not_ok(response, error_message)
         return response

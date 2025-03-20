@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "revoize"
-version = "0.1.3"
+version = "0.2.0"
 description = "Revoize Python SDK"
 authors = ["Revoize <office@revoize.com>"]
 license = "MIT"
@@ -34,6 +34,9 @@ pytest-env = "^1.1.3"
 coverage = "^7.4.4"
 pytest-mock = "^3.14.0"
 
+flake8-spellcheck = "^0.28.0"
+mypy = "^1.15.0"
+types-requests = "^2.32.0.20250306"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
@@ -86,6 +89,12 @@ cmd = "poetry run coverage xml"
 [tool.flake8]
 exclude = ["venv", ".venv"]
 max-line-length = 88
+dictionaries = ["en_US", "python", "technical"]
+ignore = ["D104", "D100", "D101", "D106", "W503", "E704"]
+per-file-ignores = """
+    tests/**: F401, F811
+"""
+whitelist = ".spellcheck-allowlist"
 
 [tool.poe.tasks.package-name]
 shell="""
@@ -96,6 +105,9 @@ echo ${package_info[0]}
 
 [tool.poe.tasks.lint]
 cmd = "poetry run flake8"
+
+[tool.poe.tasks.check-types]
+cmd = "poetry run mypy ."
 
 [tool.poe.tasks.build]
 cmd = "poetry build"

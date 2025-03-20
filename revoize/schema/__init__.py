@@ -1,6 +1,4 @@
 from .schema import (
-    CognitoLoginResponse,
-    Credentials,
     DownloadLink,
     Enhancement,
     EnhancementId,
@@ -14,8 +12,6 @@ from .schema import (
 )
 
 __all__ = [
-    "CognitoLoginResponse",
-    "Credentials",
     "DownloadLink",
     "Enhancement",
     "EnhancementId",
