@@ -40,7 +40,7 @@ class RevoizeClient:
         self.revoize_url = revoize_url or DEFAULT_REVOIZE_URL
         self.api_key = api_key
 
-    def get_user_info(self):
+    def get_user_info(self) -> UserInfo:
         return self._get_revoize(
             "/internal-api/users/me",
             error_message="Failed to retrieve user info from Revoize.",
@@ -276,17 +276,17 @@ class RevoizeClient:
     def _get_auth_header(self) -> Dict[str, str]:
         return {"X-API-KEY": self.api_key}
 
-    def _get_raw(self, *args, error_message: str, **kwargs):
+    def _get_raw(self, *args, error_message: str, **kwargs) -> requests.Response:
         response = requests.get(*args, **kwargs)
         raise_if_response_not_ok(response, error_message)
         return response
 
-    def _post_raw(self, *args, error_message: str, **kwargs):
+    def _post_raw(self, *args, error_message: str, **kwargs) -> requests.Response:
         response = requests.post(*args, **kwargs)
         raise_if_response_not_ok(response, error_message)
         return response
 
-    def _put_raw(self, *args, error_message: str, **kwargs):
+    def _put_raw(self, *args, error_message: str, **kwargs) -> requests.Response:
         response = requests.put(*args, **kwargs)
         raise_if_response_not_ok(response, error_message)
         return response
