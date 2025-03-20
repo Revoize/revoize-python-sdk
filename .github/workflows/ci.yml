@@ -55,6 +55,7 @@ jobs:
         run: |
           source .venv/bin/activate
           poe lint
+          poe check-types
 
   test-main:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
