@@ -1,9 +1,63 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - "**"
 
 jobs:
-  test-revoize:
+  test-pr:
+    if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+          version: ${{ vars.POETRY_VERSION }}
+      - name: Install Poe
+        run: |
+          pipx install poethepoet
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('./poetry.lock') }}
+      - name: Install dependencies
+        working-directory: .
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+      - name: Install project
+        working-directory: .
+        run: |
+          poetry install --no-interaction
+      - name: Run tests
+        working-directory: .
+        run: |
+          source .venv/bin/activate
+          poe test-unit
+      - name: Run lint
+        working-directory: .
+        run: |
+          source .venv/bin/activate
+          poe lint
+
+  test-main:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
