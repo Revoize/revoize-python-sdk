@@ -1,12 +1,10 @@
 import os
 import subprocess
 
-from fixtures import api_key, random_file_path, test_file_path  # noqa: F401
+from fixtures import api_key, random_file_path, test_file_path
 
 
-def test_enhance_cli(
-    api_key, random_file_path, test_file_path  # noqa: F811  # noqa: F811
-):
+def test_enhance_cli(api_key, random_file_path, test_file_path):
     subprocess.run(
         [
             "poetry",
