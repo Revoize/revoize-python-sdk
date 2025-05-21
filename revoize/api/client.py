@@ -99,9 +99,6 @@ class RevoizeClient:
             upload_id=upload_details.upload_id, etag=response.headers["etag"]
         )
 
-    def _replace_s3_url(self, source_url: str) -> str:
-        return f"{self.revoize_url}/s3/{source_url.split('/', 3)[3]}"
-
     def _complete_file_upload(
         self,
         file: File,
