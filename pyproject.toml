@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "revoize"
-version = "0.2.0"
+version = "0.3.0"
 description = "Revoize Python SDK"
 authors = ["Revoize <office@revoize.com>"]
 license = "MIT"
