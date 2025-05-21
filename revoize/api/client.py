@@ -89,7 +89,6 @@ class RevoizeClient:
         with open(file_path, "rb") as uploaded_file:
             file_contents = uploaded_file.read()
         upload_url = upload_details.presigned_urls["1"]
-        upload_url = self._replace_s3_url(upload_url)
         response = self._put_raw(
             upload_url,
             data=file_contents,
@@ -99,9 +98,6 @@ class RevoizeClient:
         return UploadedFileMetadata(
             upload_id=upload_details.upload_id, etag=response.headers["etag"]
         )
-
-    def _replace_s3_url(self, source_url: str) -> str:
-        return f"{self.revoize_url}/s3/{source_url.split('/', 3)[3]}"
 
     def _complete_file_upload(
         self,
@@ -133,8 +129,8 @@ class RevoizeClient:
         if enhancement_parameters is None:
             enhancement_parameters = EnhancementParameters()
         start_enhance_body = {
-            "soundIntensity": 100,
-            "voiceVolume": enhancement_parameters.loudness,
+            "enhancement": 100,
+            "loudness": enhancement_parameters.loudness,
         }
         enhancement_id = self._post_revoize(
             f"/internal-api/files/{uploaded_file.id}/enhance",
@@ -154,7 +150,7 @@ class RevoizeClient:
             )
             response_json = response.json()
             enhancements += [Enhancement(**value) for value in response_json["results"]]
-            if not response_json["hasNext"]:
+            if not response_json["next"]:
                 break
         else:
             raise RequestError(
@@ -188,9 +184,9 @@ class RevoizeClient:
         self, enhancement: EnhancementId, output_file_path
     ) -> None:
         download_link_response = self._get_download_link(enhancement)
-        download_url = self._replace_s3_url(download_link_response.link)
         response = self._get_raw(
-            download_url, error_message="Error when trying to download enhanced file"
+            download_link_response.link,
+            error_message="Error when trying to download enhanced file",
         )
 
         with open(output_file_path, "wb") as target_file:

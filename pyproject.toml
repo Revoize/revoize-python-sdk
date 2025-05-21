@@ -59,6 +59,9 @@ show_missing = true
 [tool.coverage.xml]
 output = "coverage.xml"
 
+[tool.poe]
+envfile = ".env"
+
 [tool.poe.tasks.test]
 sequence = [
     "test-unit",
